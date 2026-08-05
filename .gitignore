@@ -1,0 +1,42 @@
+# Python cache/build artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Editor/OS files
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Project outputs and local runs
+pipeline/output/
+pipeline/outputs/
+detector/mouth_detector/weights/runs/
+detector/mouth_detector/images/
+detector/mouth_detector/labels/
+*.tmp
+
+# Private/local datasets and test media
+dataset/
+testset/
+**/mouth_detector/images/
+**/mouth_detector/labels/
+
+# Keep only deploy-required trained weights
+!classifier/
+!classifier/model/
+!classifier/model/classifier_3class.pth
+!detector/
+!detector/mouth_detector/
+!detector/mouth_detector/weights/
+!detector/mouth_detector/weights/best.pt

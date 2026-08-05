@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dental Pipeline Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-1: #f5f0e8;
+      --bg-2: #e0efe8;
+      --ink: #121515;
+      --teal: #0f766e;
+      --sand: #f4c87b;
+      --card: rgba(255, 255, 255, 0.78);
+      --border: rgba(18, 21, 21, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Space Grotesk", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 14% 12%, #ffe6b7 0%, transparent 33%),
+        radial-gradient(circle at 82% 16%, #b9e7d6 0%, transparent 34%),
+        linear-gradient(130deg, var(--bg-1), var(--bg-2));
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    .shell {
+      width: min(960px, 100%);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 24px 70px rgba(20, 37, 34, 0.2);
+      overflow: hidden;
+      animation: rise 500ms ease-out;
+    }
+
+    .header {
+      padding: 26px 24px 18px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .title {
+      margin: 0;
+      font-size: clamp(1.3rem, 1.1rem + 1.3vw, 2rem);
+      letter-spacing: 0.02em;
+    }
+
+    .subtitle {
+      margin: 8px 0 0;
+      font-size: 0.95rem;
+      opacity: 0.8;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      padding: 22px;
+    }
+
+    .panel {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.7);
+      padding: 16px;
+    }
+
+    .label {
+      display: block;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.82rem;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      opacity: 0.85;
+    }
+
+    input[type="file"] {
+      width: 100%;
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.78);
+      font-size: 0.95rem;
+    }
+
+    .modes {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+    }
+
+    .mode-btn {
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--ink);
+      padding: 10px 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+    }
+
+    .mode-btn.active {
+      border-color: var(--teal);
+      background: color-mix(in oklab, white 82%, var(--teal));
+    }
+
+    .mode-btn:hover {
+      transform: translateY(-1px);
+      border-color: var(--teal);
+    }
+
+    .run {
+      margin-top: 12px;
+      width: 100%;
+      border: 0;
+      border-radius: 14px;
+      padding: 13px 16px;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      background: linear-gradient(120deg, var(--teal), #1a9b90);
+      color: #fff;
+      cursor: pointer;
+      transition: transform 180ms ease, filter 180ms ease;
+    }
+
+    .run:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.04);
+    }
+
+    .status {
+      margin: 0;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.88rem;
+      min-height: 1.4em;
+    }
+
+    .viewer {
+      display: grid;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .image-wrap {
+      width: 100%;
+      min-height: 240px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: linear-gradient(130deg, #fbf7ef, #e8f4ef);
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+
+    .image-wrap img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 8px;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.82rem;
+    }
+
+    .pill {
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .hint {
+      margin: 0;
+      font-size: 0.9rem;
+      opacity: 0.74;
+    }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (min-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="header">
+      <h1 class="title">Dental Pipeline Control Deck</h1>
+      <p class="subtitle">Upload one image, choose a mode button, and run your existing model pipeline without persistent storage.</p>
+    </header>
+
+    <section class="grid">
+      <div class="panel">
+        <label class="label" for="imageInput">Image Upload</label>
+        <input id="imageInput" type="file" accept="image/*" />
+
+        <p class="label" style="margin-top:14px;">Mode</p>
+        <div class="modes" id="modeButtons"></div>
+
+        <button id="runBtn" class="run">Run Pipeline</button>
+        <p id="status" class="status"></p>
+      </div>
+
+      <div class="panel viewer">
+        <div class="image-wrap" id="imageWrap">
+          <p class="hint">Result image will appear here.</p>
+        </div>
+        <div class="meta">
+          <div class="pill" id="metaClass">classification: -</div>
+          <div class="pill" id="metaMode">mode: -</div>
+          <div class="pill" id="metaNote">note: -</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const MODES = [
+      { key: "auto", label: "Auto" },
+      { key: "classify_only", label: "Classify" },
+      { key: "force_face", label: "Force Face" },
+      { key: "force_mouth", label: "Force Mouth" },
+      { key: "original", label: "Original" }
+    ];
+
+    const imageInput = document.getElementById("imageInput");
+    const modeButtons = document.getElementById("modeButtons");
+    const runBtn = document.getElementById("runBtn");
+    const statusEl = document.getElementById("status");
+    const imageWrap = document.getElementById("imageWrap");
+    const metaClass = document.getElementById("metaClass");
+    const metaMode = document.getElementById("metaMode");
+    const metaNote = document.getElementById("metaNote");
+
+    let activeMode = "auto";
+
+    function setStatus(msg, isError = false) {
+      statusEl.textContent = msg;
+      statusEl.style.color = isError ? "#b42318" : "#0f766e";
+    }
+
+    function setMode(mode) {
+      activeMode = mode;
+      for (const btn of modeButtons.querySelectorAll("button")) {
+        btn.classList.toggle("active", btn.dataset.mode === mode);
+      }
+    }
+
+    function renderModeButtons() {
+      MODES.forEach((mode, idx) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "mode-btn";
+        btn.dataset.mode = mode.key;
+        btn.textContent = mode.label;
+        btn.addEventListener("click", () => setMode(mode.key));
+        modeButtons.appendChild(btn);
+        if (idx === 0) setMode(mode.key);
+      });
+    }
+
+    function updateMeta(classification, mode, note) {
+      metaClass.textContent = `classification: ${classification ?? "-"}`;
+      metaMode.textContent = `mode: ${mode ?? "-"}`;
+      metaNote.textContent = `note: ${note ?? "-"}`;
+    }
+
+    function showImage(blob) {
+      const url = URL.createObjectURL(blob);
+      imageWrap.innerHTML = "";
+      const img = document.createElement("img");
+      img.src = url;
+      img.alt = "Pipeline result";
+      imageWrap.appendChild(img);
+    }
+
+    async function runPipeline() {
+      const file = imageInput.files?.[0];
+      if (!file) {
+        setStatus("Select an image first.", true);
+        return;
+      }
+
+      runBtn.disabled = true;
+      setStatus("Running...");
+      updateMeta("-", activeMode, "waiting for response");
+
+      const form = new FormData();
+      form.append("image", file);
+      form.append("mode", activeMode);
+
+      try {
+        const response = await fetch("/api/predict", {
+          method: "POST",
+          body: form
+        });
+
+        const contentType = response.headers.get("content-type") || "";
+
+        if (!response.ok) {
+          let message = `Request failed (${response.status})`;
+          if (contentType.includes("application/json")) {
+            const data = await response.json();
+            message = data.error || message;
+          }
+          throw new Error(message);
+        }
+
+        if (contentType.includes("application/json")) {
+          const data = await response.json();
+          updateMeta(data.classification, data.mode, data.note);
+          imageWrap.innerHTML = "<p class='hint'>Classification-only mode has no image output.</p>";
+          setStatus("Completed.");
+          return;
+        }
+
+        const blob = await response.blob();
+        showImage(blob);
+
+        const classification = response.headers.get("X-Classification") || "-";
+        const mode = response.headers.get("X-Mode") || activeMode;
+        const note = response.headers.get("X-Note") || "processed";
+        updateMeta(classification, mode, note);
+        setStatus("Completed.");
+      } catch (err) {
+        setStatus(err.message || "Something failed.", true);
+      } finally {
+        runBtn.disabled = false;
+      }
+    }
+
+    renderModeButtons();
+    runBtn.addEventListener("click", runPipeline);
+  </script>
+</body>
+</html>

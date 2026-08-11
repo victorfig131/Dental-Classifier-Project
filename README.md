@@ -91,7 +91,7 @@ python pipeline/run_pipeline.py path/to/folder --output-dir pipeline/outputs
 This repo also includes a simple browser UI:
 
 - Frontend: `public/index.html`
-- Backend: `api/index.py`
+- Backend: `api/main.py`
 
 Uploads are handled temporarily for processing and are not persisted by the app itself.
 
@@ -107,7 +107,7 @@ Run it locally with:
 
 ```bash
 pip install -r requirements.txt # or use the conda environment
-python api/index.py
+python api/main.py
 ```
 
 Then open `http://localhost:8000`.

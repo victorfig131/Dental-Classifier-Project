@@ -11,12 +11,6 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from classifier.infer_classifier import classify_image
-from detector.face_detector.infer_face import detect_face
-from detector.mouth_detector.infer_yolo import detect_mouth
-from pipeline.run_pipeline import process_image
-from utils.image_ops import crop_with_box
-
 ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".bmp", ".webp", ".tif", ".tiff"}
 ALLOWED_MODES = {"auto", "classify_only", "force_face", "force_mouth", "original"}
 
@@ -82,6 +76,12 @@ def predict():
         mode = _mode_from_request()
     except ValueError as exc:
         return jsonify({"error": str(exc)}), 400
+
+    from classifier.infer_classifier import classify_image
+    from detector.face_detector.infer_face import detect_face
+    from detector.mouth_detector.infer_yolo import detect_mouth
+    from pipeline.run_pipeline import process_image
+    from utils.image_ops import crop_with_box
 
     with tempfile.TemporaryDirectory(prefix="dental_tmp_") as tmp:
         temp_dir = Path(tmp)

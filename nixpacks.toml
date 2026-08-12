@@ -1,0 +1,5 @@
+[phases.setup]
+nixPkgs = ["python311", "gcc", "gnumake"]
+
+[variables]
+PYTHON_VERSION = "3.11"
